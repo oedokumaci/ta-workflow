@@ -1,4 +1,6 @@
 import logging
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from typing import Generator
 
 import pytest
@@ -44,3 +46,11 @@ def test_timer_decorator(caplog: Generator[LogCaptureFixture, None, None]) -> No
     assert caplog.record_tuples[0][2].startswith(
         "Method 'test_function' of module 'tests.utils_test' executed in "
     )
+
+
+def test_mime_init(sample_message: MIMEMultipart) -> None:
+    assert isinstance(sample_message, MIMEMultipart)
+    assert sample_message["From"] == "test@example.com"
+    assert sample_message["To"] == "test1@example.com,test2@example.com"
+    assert sample_message["Subject"] == "Test Subject"
+    assert isinstance(sample_message.get_payload()[0], MIMEText)

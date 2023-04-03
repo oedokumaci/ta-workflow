@@ -1,9 +1,10 @@
 import logging
+from email.mime.multipart import MIMEMultipart
 from typing import Generator
 
 import pytest
 
-from ta_workflow.utils import LOG_PATH, init_logger
+from ta_workflow.utils import LOG_PATH, _mime_init, init_logger
 
 
 @pytest.fixture(scope="package")
@@ -15,3 +16,13 @@ def logger_fixture() -> Generator[None, None, None]:
     for handler in logger.handlers:  # close all handlers, Windows fix
         handler.close()
     log_file_path.unlink()
+
+
+@pytest.fixture(scope="package")
+def sample_message() -> MIMEMultipart:
+    return _mime_init(
+        from_addr="test@example.com",
+        to_addr=["test1@example.com", "test2@example.com"],
+        subject="Test Subject",
+        body="Test Body",
+    )
