@@ -3,7 +3,7 @@ from typing import Generator
 
 import pytest
 
-from template_python.utils import LOG_PATH, init_logger
+from ta_workflow.utils import LOG_PATH, init_logger
 
 
 @pytest.fixture(scope="package")
