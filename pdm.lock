@@ -404,6 +404,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "unidecode"
+version = "1.3.6"
+requires_python = ">=3.5"
+summary = "ASCII transliterations of Unicode text"
+
+[[package]]
 name = "urllib3"
 version = "1.26.15"
 requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
@@ -423,7 +429,7 @@ dependencies = [
 [metadata]
 lock_version = "4.2"
 groups = ["default", "test", "workflow"]
-content_hash = "sha256:dcbb508138fdf43ee3240bba26ad7936cf7dd9233f8ef69beec3b01b8a03f0e4"
+content_hash = "sha256:5818502699cea2d7b32a5d12fe6249f39822fdcb54bd5b6852a53c980d940580"
 
 [metadata.files]
 "attrs 22.2.0" = [
@@ -884,6 +890,10 @@ content_hash = "sha256:dcbb508138fdf43ee3240bba26ad7936cf7dd9233f8ef69beec3b01b8
 "unearth 0.8.1" = [
     {url = "https://files.pythonhosted.org/packages/29/d5/8dadc8cbd62ae5a43c1afddf5b4ae0536b0381f341598d2840b22402a9db/unearth-0.8.1-py3-none-any.whl", hash = "sha256:e3105e362786f64d40fc53796bea4f5405e308d4755a2c482dba3a3d0ebda0eb"},
     {url = "https://files.pythonhosted.org/packages/b4/b2/104164436e7cbdd9db5524fe89055ccb51385570df30f278b7421e5bda5a/unearth-0.8.1.tar.gz", hash = "sha256:62d3493619d181746c0e0586dfcf6cef957b95f4d3b042698eda312fdbf0617b"},
+]
+"unidecode 1.3.6" = [
+    {url = "https://files.pythonhosted.org/packages/0b/25/37c77fc07821cd06592df3f18281f5e716bc891abd6822ddb9ff941f821e/Unidecode-1.3.6.tar.gz", hash = "sha256:fed09cf0be8cf415b391642c2a5addfc72194407caee4f98719e40ec2a72b830"},
+    {url = "https://files.pythonhosted.org/packages/be/ea/90e14e807da5a39e5b16789acacd48d63ca3e4f23dfa964a840eeadebb13/Unidecode-1.3.6-py3-none-any.whl", hash = "sha256:547d7c479e4f377b430dd91ac1275d593308dce0fc464fb2ab7d41f82ec653be"},
 ]
 "urllib3 1.26.15" = [
     {url = "https://files.pythonhosted.org/packages/21/79/6372d8c0d0641b4072889f3ff84f279b738cd8595b64c8e0496d4e848122/urllib3-1.26.15.tar.gz", hash = "sha256:8a388717b9476f934a21484e8c8e61875ab60644d29b9b39e11e4b9dc1c6b305"},

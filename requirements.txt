@@ -48,5 +48,6 @@ typer==0.7.0
 typing-extensions==4.5.0
 tzdata==2023.3
 unearth==0.8.1
+unidecode==1.3.6
 urllib3==1.26.15
 virtualenv==20.21.0
