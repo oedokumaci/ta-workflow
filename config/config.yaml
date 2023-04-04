@@ -1,1 +1,3 @@
 course_name: "econ504"  # name of the folder where the outputs will be saved under /outputs
+student_data_file_name: "classRoster_20222_ECON_504_001.xls"  # name of the file with student data, must be in /data
+number_of_homeworks: 4  # number of homeworks so far
