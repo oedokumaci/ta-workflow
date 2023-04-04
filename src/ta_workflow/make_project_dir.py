@@ -1,15 +1,22 @@
 from pathlib import Path
 
-import pandas as pd  # type: ignore
-
 from ta_workflow.config_parser import YAML_CONFIG
+from ta_workflow.student import STUDENTS, Student
 
-OUTPUTS_DIR: Path = Path(__file__).parents[2] / "outputs"
-DATA_DIR: Path = Path(__file__).parents[2] / "data"
+PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
+HOMEWORKS_SO_FAR = [
+    f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
+]
 
-print(YAML_CONFIG)
 
-if YAML_CONFIG.student_data_file_name.endswith(".csv"):
-    df = pd.read_csv(DATA_DIR / YAML_CONFIG.student_data_file_name)
-elif YAML_CONFIG.student_data_file_name.endswith(".xls"):
-    df = pd.read_excel(DATA_DIR / YAML_CONFIG.student_data_file_name)
+def make_project_dir(students: list[Student], homework_names: list[str]) -> None:
+    for student in students:
+        student_dir = PROJECT_ROOT / (student.last_name + "_" + student.bilkent_id)
+        student_dir.mkdir(exist_ok=True)
+        for homework in homework_names:
+            homework_dir = student_dir / homework
+            homework_dir.mkdir(exist_ok=True)
+
+
+if __name__ == "__main__":
+    make_project_dir(STUDENTS, HOMEWORKS_SO_FAR)
