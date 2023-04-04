@@ -1,102 +1,60 @@
-import base64
-import email
-from datetime import datetime
+import subprocess
 from pathlib import Path
-from urllib.request import Request
 
-from google.oauth2.credentials import Credentials  # type: ignore
-from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
-from googleapiclient.discovery import build  # type: ignore
-from googleapiclient.errors import HttpError  # type: ignore
+from fuzzywuzzy import process  # type: ignore
+from unidecode import unidecode
 
-# Set the folder name, Gmail API credentials file path, and output folder path
-folder_name = "Your folder name"
-credentials_path = Path("path/to/credentials.json")
-output_folder_path = Path("path/to/output/folder")
+from ta_workflow.config_parser import YAML_CONFIG
+from ta_workflow.student import Student, parse_student_data
+
+PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 
 
-# Define a function to retrieve the Gmail API service object
-def get_gmail_service():
-    creds = None
-    if (token := output_folder_path / "token.json").exists():
-        creds = Credentials.from_authorized_user_file(
-            token, ["https://www.googleapis.com/auth/gmail.readonly"]
-        )
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                credentials_path, ["https://www.googleapis.com/auth/gmail.readonly"]
+def distribute_homeworks(
+    students: list[Student], homework_names: list[str], copy: bool = False
+) -> None:
+    students_full_names = {
+        student.first_name + " " + student.last_name: student for student in students
+    }
+    matched_students = {student: 0 for student in students}
+    for homework in homework_names:
+        homework_dir = PROJECT_ROOT / homework
+        for file in homework_dir.iterdir():
+            best_match, score = process.extractOne(
+                unidecode(file.name), students_full_names.keys()
             )
-            creds = flow.run_local_server(port=0)
-        with open(token, "w") as token_file:
-            token_file.write(creds.to_json())
-    service = build("gmail", "v1", credentials=creds)
-    return service
+            best_match_student = students_full_names[best_match]
+            if score < 35:
+                print(f"Could not find a match for {file.name}")
+            else:
+                if matched_students[best_match_student] == 0:
+                    matched_students[best_match_student] = score
+                    print(
+                        f"Found a match for {file.name}: {best_match_student.first_name} {best_match_student.last_name}, score: {score}"
+                    )
+                    if copy:
+                        subprocess.run(
+                            [
+                                "cp",
+                                file.resolve(),
+                                PROJECT_ROOT
+                                / (
+                                    best_match_student.last_name
+                                    + "_"
+                                    + best_match_student.bilkent_id
+                                )
+                                / homework,
+                            ]
+                        )
+                else:
+                    print(
+                        f"{best_match.first_name} {best_match.last_name} is already matched"
+                    )
 
 
-# Define a function to retrieve a list of message IDs in the specified folder
-def get_message_ids(service):
-    try:
-        response = (
-            service.users()
-            .messages()
-            .list(userId="me", q=f"in:{folder_name}")
-            .execute()
-        )
-        messages = []
-        if "messages" in response:
-            messages.extend(response["messages"])
-        while "nextPageToken" in response:
-            page_token = response["nextPageToken"]
-            response = (
-                service.users()
-                .messages()
-                .list(userId="me", q=f"in:{folder_name}", pageToken=page_token)
-                .execute()
-            )
-            if "messages" in response:
-                messages.extend(response["messages"])
-        message_ids = []
-        for message in messages:
-            message_ids.append(message["id"])
-        return message_ids
-    except HttpError as error:
-        print(f"An error occurred: {error}")
-        return None
-
-
-# Define a function to retrieve the specified message and parse the attachments
-def get_message_attachments(service, message_id):
-    try:
-        message = service.users().messages().get(userId="me", id=message_id).execute()
-        msg = email.message_from_string(message["payload"]["headers"][0]["value"])
-        sender = msg["From"].split()[-1].strip("<>")
-        date = datetime.fromtimestamp(int(message["internalDate"]) / 1000).strftime(
-            "%Y-%m-%d %H-%M-%S"
-        )
-        for part in message["payload"]["parts"]:
-            if part["filename"]:
-                filename = f"{date} {sender} {folder_name} {part['filename']}"
-                data = part["body"]["data"]
-                file_data = base64.urlsafe_b64decode(data.encode("UTF-8"))
-                with open(output_folder_path / filename, "wb") as f:
-                    f.write(file_data)
-    except HttpError as error:
-        print(f"An error occurred: {error}")
-
-
-# Retrieve the Gmail API service object
-service = get_gmail_service()
-
-# Retrieve the list of message IDs in the specified folder
-message_ids = get_message_ids(service)
-
-# Iterate through each message ID and download the attachments
-if message_ids:
-    for message_id in message_ids:
-        get_message_attachments(service, message_id)
-    print("Attachments downloaded successfully.")
-else:
-    print("No messages found in the specified folder.")
+if __name__ == "__main__":
+    STUDENTS = parse_student_data()
+    HOMEWORKS_SO_FAR = [
+        f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
+    ]
+    distribute_homeworks(STUDENTS, HOMEWORKS_SO_FAR[:1])
