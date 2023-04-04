@@ -15,17 +15,10 @@ class YAMLConfig(BaseModel):
     Inherits from pydantic BaseModel.
     """
 
-    course_name: str
+    project_root_path: str
     student_data_file_name: str
     number_of_homeworks: int
-
-    @validator("course_name")
-    def course_name_must_be_valid(cls, v: str) -> str:
-        if not v.isidentifier():
-            raise ValueError(
-                f"course_name must be a valid Python identifier, {v} is not"
-            )
-        return v
+    email_frequency_in_seconds: float
 
     @validator("student_data_file_name")
     def student_data_file_name_must_be_valid(cls, v: str) -> str:
@@ -41,6 +34,12 @@ class YAMLConfig(BaseModel):
             raise ValueError(
                 f"number_of_homeworks must be a positive integer, {v} is not"
             )
+        return v
+
+    @validator("email_frequency_in_seconds")
+    def email_frequency_in_seconds_must_be_valid(cls, v: float) -> float:
+        if v <= 0:
+            raise ValueError(f"email_frequency_in_seconds must be positive, {v} is not")
         return v
 
 

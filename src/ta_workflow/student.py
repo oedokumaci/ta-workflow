@@ -6,7 +6,7 @@ from unidecode import unidecode
 
 from ta_workflow.config_parser import YAML_CONFIG
 
-DATA_DIR: Path = Path(__file__).parents[2] / "data"
+PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 
 
 class Student(BaseModel):
@@ -18,18 +18,20 @@ class Student(BaseModel):
     withdraw_fz: bool
 
 
-def parse_student_data(resave: bool = False) -> list[Student]:
+def parse_student_data(resave: bool = True) -> list[Student]:
     try:
         df = pd.read_excel(
-            DATA_DIR
+            PROJECT_ROOT
             / (YAML_CONFIG.student_data_file_name.split(".")[0] + "_fixed.xlsx")
         )
     except FileNotFoundError:
         if YAML_CONFIG.student_data_file_name.endswith(".csv"):
-            df = pd.read_csv(DATA_DIR / YAML_CONFIG.student_data_file_name, index_col=0)
+            df = pd.read_csv(
+                PROJECT_ROOT / YAML_CONFIG.student_data_file_name, index_col=0
+            )
         elif YAML_CONFIG.student_data_file_name.endswith(".xls"):
             df = pd.read_excel(
-                DATA_DIR / YAML_CONFIG.student_data_file_name, index_col=0
+                PROJECT_ROOT / YAML_CONFIG.student_data_file_name, index_col=0
             )
 
     # fix messy column names
@@ -48,7 +50,7 @@ def parse_student_data(resave: bool = False) -> list[Student]:
 
     if resave:
         df.to_excel(
-            DATA_DIR
+            PROJECT_ROOT
             / (YAML_CONFIG.student_data_file_name.split(".")[0] + "_fixed.xlsx"),
             index=False,
         )

@@ -1,3 +1,4 @@
-course_name: "econ504"  # name of the folder where the outputs will be saved under /outputs
-student_data_file_name: "classRoster_20222_ECON_504_001.xls"  # name of the file with student data, must be in /data
+project_root_path: "/Users/oedokumaci/Documents/Econ504-Spring2023"  # absolute path to the project root
+student_data_file_name: "classRoster_20222_ECON_504_001.xls"  # name of the file with student data, must be in project root
 number_of_homeworks: 4  # number of homeworks so far
+email_frequency_in_seconds: 10 # sleep time between each email
