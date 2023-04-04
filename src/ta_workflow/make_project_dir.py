@@ -1,12 +1,9 @@
 from pathlib import Path
 
 from ta_workflow.config_parser import YAML_CONFIG
-from ta_workflow.student import STUDENTS, Student
+from ta_workflow.student import Student, parse_student_data
 
 PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
-HOMEWORKS_SO_FAR = [
-    f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
-]
 
 
 def make_project_dir(students: list[Student], homework_names: list[str]) -> None:
@@ -19,4 +16,8 @@ def make_project_dir(students: list[Student], homework_names: list[str]) -> None
 
 
 if __name__ == "__main__":
+    STUDENTS = parse_student_data()
+    HOMEWORKS_SO_FAR = [
+        f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
+    ]
     make_project_dir(STUDENTS, HOMEWORKS_SO_FAR)

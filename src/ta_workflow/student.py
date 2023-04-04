@@ -60,6 +60,3 @@ def parse_student_data(resave: bool = True) -> list[Student]:
         students.append(Student(**row._asdict()))
 
     return students
-
-
-STUDENTS = parse_student_data()
