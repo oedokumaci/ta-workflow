@@ -25,12 +25,14 @@ def distribute_homeworks(
             )
             best_match_student = students_full_names[best_match]
             if score < 35:
-                print(f"Could not find a match for {file.name}")
+                print(
+                    f"Could not find a match for {unidecode(file.name):<41} {'-----':<15} {'-----':<10} Similarity Score: {'--'}"
+                )
             else:
                 if matched_students[best_match_student] == 0:
                     matched_students[best_match_student] = score
                     print(
-                        f"Found a match for {file.name}: {best_match_student.first_name} {best_match_student.last_name}, score: {score}"
+                        f"Found a match for {unidecode(file.name):<50} {best_match_student.first_name:<15} {best_match_student.last_name:<10} Similarity Score: {score}"
                     )
                     if copy:
                         subprocess.run(
@@ -57,4 +59,4 @@ if __name__ == "__main__":
     HOMEWORKS_SO_FAR = [
         f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
     ]
-    distribute_homeworks(STUDENTS, HOMEWORKS_SO_FAR[:1])
+    distribute_homeworks(STUDENTS, HOMEWORKS_SO_FAR)
