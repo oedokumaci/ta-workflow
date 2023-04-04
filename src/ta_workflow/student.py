@@ -17,6 +17,10 @@ class Student(BaseModel):
     email: str
     withdraw_fz: bool
 
+    def __hash__(self) -> int:
+        # Since bilkent_id is unique, we can use it as a hash
+        return hash(self.bilkent_id)
+
 
 def parse_student_data(resave: bool = True) -> list[Student]:
     try:
