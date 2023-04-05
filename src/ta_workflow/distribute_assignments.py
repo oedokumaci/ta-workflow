@@ -10,16 +10,16 @@ from ta_workflow.student import Student, parse_student_data
 PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 
 
-def distribute_homeworks(
-    students: list[Student], homework_names: list[str], copy: bool = False
+def distribute_assignments(
+    students: list[Student], assignment_names: list[str], copy: bool = False
 ) -> None:
     students_full_names = {
         student.first_name + " " + student.last_name: student for student in students
     }
     matched_students = {student: 0 for student in students}
-    for homework in homework_names:
-        homework_dir = PROJECT_ROOT / homework
-        for file in homework_dir.iterdir():
+    for assignment in assignment_names:
+        assignment_dir = PROJECT_ROOT / assignment
+        for file in assignment_dir.iterdir():
             best_match, score = process.extractOne(
                 unidecode(file.name), students_full_names.keys()
             )
@@ -45,7 +45,7 @@ def distribute_homeworks(
                                     + "_"
                                     + best_match_student.bilkent_id
                                 )
-                                / homework,
+                                / assignment,
                             ]
                         )
                 else:
@@ -59,4 +59,5 @@ if __name__ == "__main__":
     HOMEWORKS_SO_FAR = [
         f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
     ]
-    distribute_homeworks(STUDENTS, HOMEWORKS_SO_FAR)
+    QUIZZES_SO_FAR = [f"Quiz_{i}" for i in range(1, YAML_CONFIG.number_of_quizzes + 1)]
+    distribute_assignments(STUDENTS, QUIZZES_SO_FAR)

@@ -18,6 +18,7 @@ class YAMLConfig(BaseModel):
     project_root_path: str
     student_data_file_name: str
     number_of_homeworks: int
+    number_of_quizzes: int
     email_frequency_in_seconds: float
 
     @validator("student_data_file_name")
@@ -33,6 +34,14 @@ class YAMLConfig(BaseModel):
         if v < 1:
             raise ValueError(
                 f"number_of_homeworks must be a positive integer, {v} is not"
+            )
+        return v
+
+    @validator("number_of_quizzes")
+    def number_of_quizzes_must_be_valid(cls, v: int) -> int:
+        if v < 1:
+            raise ValueError(
+                f"number_of_quizzes must be a positive integer, {v} is not"
             )
         return v
 
