@@ -50,7 +50,7 @@ def distribute_homeworks(
                         )
                 else:
                     print(
-                        f"{best_match.first_name} {best_match.last_name} is already matched"
+                        f"{best_match_student.first_name} {best_match_student.last_name} is already matched"
                     )
 
 
