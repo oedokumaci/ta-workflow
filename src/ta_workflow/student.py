@@ -22,7 +22,7 @@ class Student(BaseModel):
         return hash(self.bilkent_id)
 
 
-def parse_student_data(resave: bool = True) -> list[Student]:
+def parse_student_data(resave: bool = False) -> list[Student]:
     try:
         df = pd.read_excel(
             PROJECT_ROOT
