@@ -24,6 +24,7 @@ dependencies = [
     "fuzzywuzzy>=0.18.0",
     "python-Levenshtein>=0.20.9",
     "pandas==1.5.3",
+    "PyPDF2>=3.0.1",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
