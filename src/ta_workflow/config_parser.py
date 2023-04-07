@@ -20,6 +20,7 @@ class YAMLConfig(BaseModel):
     number_of_homeworks: int
     number_of_quizzes: int
     email_frequency_in_seconds: float
+    google_drive_path: str
 
     @validator("student_data_file_name")
     def student_data_file_name_must_be_valid(cls, v: str) -> str:
