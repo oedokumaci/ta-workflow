@@ -1,7 +1,6 @@
 """Module for utility functions."""
 
 import logging
-import os
 import smtplib
 import sys
 from email import encoders
@@ -126,7 +125,7 @@ def send_email(
             encoders.encode_base64(part)
             part.add_header(
                 "Content-Disposition",
-                "attachment; filename= %s" % os.path.basename(file_path),
+                "attachment; filename= %s" % Path(file_path).name,
             )
             message.attach(part)
 
