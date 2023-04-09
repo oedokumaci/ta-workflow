@@ -1,6 +1,8 @@
-project_root_path: "/Users/oedokumaci/Documents/Econ504-Spring2023"  # absolute path to the project root
-student_data_file_name: "classRoster_20222_ECON_504_001.xls"  # name of the file with student data, must be in project root
+project_root_path: /Users/oedokumaci/Documents/Econ504-Spring2023  # absolute path to the project root
+student_data_file_name: classRoster_20222_ECON_504_001.xls  # name of the file with student data, must be in project root
 number_of_homeworks: 2  # number of homeworks so far
 number_of_quizzes: 1  # number of quizzes so far
 email_frequency_in_seconds: 10 # sleep time between each email
 google_drive_path: /Users/oedokumaci/Library/CloudStorage/GoogleDrive-oral.ersoy.dokumaci@gmail.com/My Drive/Temp Share
+course_code: ECON504
+ta_name: Ersoy

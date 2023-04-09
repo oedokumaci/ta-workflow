@@ -21,6 +21,8 @@ class YAMLConfig(BaseModel):
     number_of_quizzes: int
     email_frequency_in_seconds: float
     google_drive_path: str
+    course_code: str
+    ta_name: str
 
     @validator("student_data_file_name")
     def student_data_file_name_must_be_valid(cls, v: str) -> str:
@@ -52,11 +54,18 @@ class YAMLConfig(BaseModel):
             raise ValueError(f"email_frequency_in_seconds must be positive, {v} is not")
         return v
 
+    @validator("course_code")
+    def course_code_must_be_valid(cls, v: str) -> str:
+        if not v.isidentifier():
+            raise ValueError(f"course_code must be a valid identifier, {v} is not")
+        elif not v.isupper():
+            raise ValueError(f"course_code must be all uppercase, {v} is not")
+        return v
+
 
 def parse_and_validate_configs() -> YAMLConfig:
     """Parses and validates the contents of config files in config directory."""
 
-    # config.yaml
     with open(CONFIG_DIR / "config.yaml") as yaml_file:
         yaml_config: dict[str, str] = yaml.safe_load(yaml_file)
     YAML_CONFIG = YAMLConfig(**yaml_config)
