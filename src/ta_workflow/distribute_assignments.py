@@ -5,7 +5,7 @@ from fuzzywuzzy import process  # type: ignore
 from unidecode import unidecode
 
 from ta_workflow.config_parser import YAML_CONFIG
-from ta_workflow.student import Student, parse_student_data
+from ta_workflow.student import Student, parse_and_validate_student_data
 
 PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 
@@ -17,8 +17,8 @@ def distribute_assignments(
         student.first_name + " " + student.last_name: student for student in students
     }
     matched_students = {student: 0 for student in students}
-    for assignment in assignment_names:
-        assignment_dir = PROJECT_ROOT / assignment
+    for assignment_name in assignment_names:
+        assignment_dir = PROJECT_ROOT / assignment_name
         for file in assignment_dir.iterdir():
             best_match, score = process.extractOne(
                 unidecode(file.name), students_full_names.keys()
@@ -45,7 +45,7 @@ def distribute_assignments(
                                     + "_"
                                     + best_match_student.bilkent_id
                                 )
-                                / assignment,
+                                / assignment_name,
                             ]
                         )
                 else:
@@ -55,7 +55,7 @@ def distribute_assignments(
 
 
 if __name__ == "__main__":
-    STUDENTS = parse_student_data()
+    STUDENTS = parse_and_validate_student_data()
     HOMEWORKS_SO_FAR = [
         f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
     ]

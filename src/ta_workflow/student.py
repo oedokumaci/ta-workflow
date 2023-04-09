@@ -22,7 +22,7 @@ class Student(BaseModel):
         return hash(self.bilkent_id)
 
 
-def parse_student_data(resave: bool = False) -> list[Student]:
+def parse_and_validate_student_data(resave: bool = False) -> list[Student]:
     try:
         df = pd.read_excel(
             PROJECT_ROOT
@@ -38,19 +38,19 @@ def parse_student_data(resave: bool = False) -> list[Student]:
                 PROJECT_ROOT / YAML_CONFIG.student_data_file_name, index_col=0
             )
 
-    # fix messy column names
-    df.columns = (
-        df.columns.str.strip()
-        .str.lower()
-        .str.replace(" ", "_")
-        .str.replace("/", "_")
-        .str.replace("-", "")
-    )
+        # fix messy column names
+        df.columns = (
+            df.columns.str.strip()
+            .str.lower()
+            .str.replace(" ", "_")
+            .str.replace("/", "_")
+            .str.replace("-", "")
+        )
 
-    # fix data
-    df["withdraw_fz"] = df["withdraw_fz"].fillna(False)
-    df["first_name"] = df["first_name"].apply(unidecode)
-    df["last_name"] = df["last_name"].apply(unidecode)
+        # fix data
+        df["withdraw_fz"] = df["withdraw_fz"].fillna(False)
+        df["first_name"] = df["first_name"].apply(unidecode)
+        df["last_name"] = df["last_name"].apply(unidecode)
 
     if resave:
         df.to_excel(
@@ -59,8 +59,4 @@ def parse_student_data(resave: bool = False) -> list[Student]:
             index=False,
         )
 
-    students = []
-    for row in df.itertuples():
-        students.append(Student(**row._asdict()))
-
-    return students
+    return [Student(**row._asdict()) for row in df.itertuples()]
