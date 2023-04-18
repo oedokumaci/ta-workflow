@@ -19,9 +19,11 @@ def grades_to_excel(students: list[Student], assignment_names: list[str]) -> Non
             student_grade = df[df["bilkent_id"] == int(student.bilkent_id)][
                 assignment
             ].values[0]
-            assignment_data[student.bilkent_id] = student_grade
-        save_as = Path(__file__).parents[2] / "outputs" / f"{assignment}.xlsx"
-        save_as_other = PROJECT_ROOT / f"{assignment}.xlsx"
+            assignment_data[student.bilkent_id] = round(student_grade, 2)
+        save_as = (
+            Path(__file__).parents[2] / "outputs" / f"{assignment}.xls"
+        )  # AIRS want .xls not .xlsx
+        save_as_other = PROJECT_ROOT / f"{assignment}.xls"
         pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
             str(save_as), header=False
         )
