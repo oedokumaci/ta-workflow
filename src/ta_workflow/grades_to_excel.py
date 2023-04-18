@@ -20,9 +20,13 @@ def grades_to_excel(students: list[Student], assignment_names: list[str]) -> Non
                 assignment
             ].values[0]
             assignment_data[student.bilkent_id] = student_grade
-        save_as = PROJECT_ROOT / "outputs" / f"{assignment}.xls"
+        save_as = Path(__file__).parents[2] / "outputs" / f"{assignment}.xlsx"
+        save_as_other = PROJECT_ROOT / f"{assignment}.xlsx"
         pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
             str(save_as), header=False
+        )
+        pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
+            str(save_as_other), header=False
         )
 
 
