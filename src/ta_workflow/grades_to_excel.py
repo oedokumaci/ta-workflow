@@ -1,3 +1,5 @@
+import subprocess
+import sys
 from pathlib import Path
 
 import pandas as pd  # type: ignore
@@ -6,6 +8,7 @@ from ta_workflow.config_parser import YAML_CONFIG
 from ta_workflow.student import Student, parse_and_validate_student_data
 
 PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
+OS = "windows-based" if sys.platform.startswith("win") else "unix-based"
 
 
 def grades_to_excel(students: list[Student], assignment_names: list[str]) -> None:
@@ -20,16 +23,15 @@ def grades_to_excel(students: list[Student], assignment_names: list[str]) -> Non
                 assignment
             ].values[0]
             assignment_data[student.bilkent_id] = round(student_grade, 2)
-        save_as = (
-            Path(__file__).parents[2] / "outputs" / f"{assignment}.xls"
-        )  # AIRS want .xls not .xlsx
-        save_as_other = PROJECT_ROOT / f"{assignment}.xls"
+        original = PROJECT_ROOT / f"{assignment}.xls"  # AIRS want .xls not .xlsx
+        sym_link = Path(__file__).parents[2] / "outputs" / f"{assignment}.xls"
         pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
-            str(save_as), header=False
+            str(original), header=False
         )
-        pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
-            str(save_as_other), header=False
-        )
+        if OS == "windows-based":
+            subprocess.run(["mklink", str(sym_link), str(original)], shell=True)
+        else:
+            subprocess.run(["ln", "-s", str(original), str(sym_link)], shell=True)
 
 
 if __name__ == "__main__":
