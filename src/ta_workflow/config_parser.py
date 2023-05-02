@@ -66,7 +66,7 @@ def parse_and_validate_configs() -> YAMLConfig:
 
     with open(CONFIG_DIR / "config.yaml") as yaml_file:
         yaml_config: dict[str, str] = yaml.safe_load(yaml_file)
-    YAML_CONFIG = YAMLConfig(**yaml_config)
+    YAML_CONFIG = YAMLConfig(**yaml_config)  # type: ignore
 
     return YAML_CONFIG
 
