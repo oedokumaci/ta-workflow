@@ -1,3 +1,4 @@
+import logging
 import subprocess
 from pathlib import Path
 
@@ -5,7 +6,7 @@ from fuzzywuzzy import process  # type: ignore
 from unidecode import unidecode
 
 from ta_workflow.config_parser import YAML_CONFIG
-from ta_workflow.student import Student, parse_and_validate_student_data
+from ta_workflow.student import Student
 
 PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 
@@ -25,13 +26,13 @@ def distribute_assignments(
             )
             best_match_student = students_full_names[best_match]
             if score < 35:
-                print(
+                logging.info(
                     f"Could not find a match for {unidecode(file.name):<41} {'-----':<15} {'-----':<10} Similarity Score: {'--'}"
                 )
             else:
                 if matched_students[best_match_student] == 0:
                     matched_students[best_match_student] = score
-                    print(
+                    logging.info(
                         f"Found a match for {unidecode(file.name):<50} {best_match_student.first_name:<15} {best_match_student.last_name:<10} Similarity Score: {score}"
                     )
                     if copy:
@@ -49,15 +50,6 @@ def distribute_assignments(
                             ]
                         )
                 else:
-                    print(
+                    logging.info(
                         f"{best_match_student.first_name} {best_match_student.last_name} is already matched"
                     )
-
-
-if __name__ == "__main__":
-    STUDENTS = parse_and_validate_student_data()
-    HOMEWORKS_SO_FAR = [
-        f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
-    ]
-    QUIZZES_SO_FAR = [f"Quiz_{i}" for i in range(1, YAML_CONFIG.number_of_quizzes + 1)]
-    distribute_assignments(STUDENTS, QUIZZES_SO_FAR)

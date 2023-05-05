@@ -2,41 +2,26 @@
 
 import typer
 
-from ta_workflow.utils import LOG_PATH, init_logger
+from ta_workflow.utils import prepare
 
-log_file_name_argument = typer.Argument(
-    "logs.log", help="Name of the log file, default is 'logs.log'"
+app = typer.Typer()
+
+copy_option = typer.Option(
+    False,
+    help="Copy the files to the students' directories. Default just prints the matches.",
 )
-override_option = typer.Option(
-    False, help="Override log file if it exists, default is False"
-)
 
 
-def check_log_file_name(log_file_name: str) -> None:
-    user_input = (
-        input(f"log_file_name {log_file_name!r} already exists, overwrite? y/n (n): ")
-        or "n"
-    )
-    if user_input != "y":
-        raise SystemExit(
-            "exiting not to overwrite, please use a different log_file_name"
-        )
-    print("")
+@app.command()
+def distribute(copy: bool = copy_option) -> None:
+    """Distribute the assignments."""
+    from ta_workflow.distribute_assignments import distribute_assignments
 
+    students, homeworks, quizzes = prepare()
+    assignments = homeworks + quizzes
+    selected_assignments = []
+    for assignment in assignments:
+        if typer.confirm(f"Would you like to distribute {assignment}?"):
+            selected_assignments.append(assignment)
 
-def main(
-    log_file_name: str = log_file_name_argument, override: bool = override_option
-) -> None:
-    # Check if log file exists, if so ask to overwrite
-    log_file = LOG_PATH / log_file_name
-    if not override and log_file.exists():
-        check_log_file_name(log_file_name)
-
-    # Initialize logger
-    init_logger(log_file_name)
-
-    # Print log file path
-    print("")
-    print(f"logs are saved to {log_file.resolve()}")
-
-    raise typer.Exit()
+    distribute_assignments(students, selected_assignments, copy)

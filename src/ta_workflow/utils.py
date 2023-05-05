@@ -11,18 +11,37 @@ from pathlib import Path
 from time import time
 from typing import Callable, ParamSpec, TypeVar
 
+from ta_workflow.config_parser import YAML_CONFIG
+from ta_workflow.student import Student, parse_and_validate_student_data
+
 R = TypeVar("R")
 P = ParamSpec("P")
 LOG_PATH: Path = Path(__file__).parents[2] / "logs"
 
 
-def init_logger(file_name: str) -> None:
+def check_log_file_name(log_file_name: str) -> str:
+    if not log_file_name.endswith(".log") and not log_file_name.endswith(".txt"):
+        log_file_name = f"{log_file_name}.log"
+
+    log_file = LOG_PATH / log_file_name
+    if log_file.exists():
+        user_input = (
+            input(f"{log_file_name=!r} already exists, overwrite? y/n (n): ") or "n"
+        )
+        if user_input != "y":
+            new_log_file_name = input("Enter new log file name: ")
+            log_file_name = check_log_file_name(new_log_file_name)
+    return log_file_name
+
+
+def init_logger(log_file_name: str = "logs.log") -> None:
     """Initialize the logger.
 
     Args:
         file_name (str): the name of the log file
     """
-    log_file: Path = LOG_PATH / file_name
+    log_name = check_log_file_name(log_file_name)
+    log_file: Path = LOG_PATH / log_name
     log_file.unlink(missing_ok=True)
     log_file.touch()
     log_formatter = logging.Formatter("%(asctime)s:%(levelname)s: %(message)s")
@@ -145,3 +164,13 @@ def send_email(
         server.sendmail(from_addr, to_addr, text)
 
     server.quit()
+
+
+def prepare() -> tuple[list[Student], list[str], list[str]]:
+    STUDENTS: list[Student] = parse_and_validate_student_data()
+    HOMEWORKS_SO_FAR = [
+        f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
+    ]
+    QUIZZES_SO_FAR = [f"Quiz_{i}" for i in range(1, YAML_CONFIG.number_of_quizzes + 1)]
+    init_logger()
+    return STUDENTS, HOMEWORKS_SO_FAR, QUIZZES_SO_FAR

@@ -1,7 +1,6 @@
 """Entry-point module, in case of using `python -m ta_workflow`."""
 
-import typer
+from ta_workflow.cli import app
 
-from ta_workflow.cli import main
-
-typer.run(main)
+if __name__ == "__main__":
+    app()
