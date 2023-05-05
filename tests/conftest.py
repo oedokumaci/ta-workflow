@@ -4,7 +4,8 @@ from typing import Generator
 
 import pytest
 
-from ta_workflow.utils import LOG_PATH, _mime_init, init_logger
+from ta_workflow.path import LOG_PATH
+from ta_workflow.utils import _mime_init, init_logger
 
 
 @pytest.fixture(scope="package")

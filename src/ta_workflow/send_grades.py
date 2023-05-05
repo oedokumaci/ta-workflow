@@ -8,10 +8,10 @@ import pandas as pd  # type: ignore
 from unidecode import unidecode
 
 from ta_workflow.config_parser import YAML_CONFIG
+from ta_workflow.path import PROJECT_ROOT
 from ta_workflow.student import Student, parse_and_validate_student_data
 from ta_workflow.utils import send_email
 
-PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 SEND_EVERY_N_SECONDS = (
     YAML_CONFIG.email_frequency_in_seconds
 )  # to avoid too much email error

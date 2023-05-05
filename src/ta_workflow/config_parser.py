@@ -1,5 +1,4 @@
 """This module parses and validates the config files in config directory."""
-
 from pathlib import Path
 
 import yaml

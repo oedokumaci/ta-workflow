@@ -12,11 +12,11 @@ from time import time
 from typing import Callable, ParamSpec, TypeVar
 
 from ta_workflow.config_parser import YAML_CONFIG
+from ta_workflow.path import LOG_PATH
 from ta_workflow.student import Student, parse_and_validate_student_data
 
 R = TypeVar("R")
 P = ParamSpec("P")
-LOG_PATH: Path = Path(__file__).parents[2] / "logs"
 
 
 def check_log_file_name(log_file_name: str) -> str:

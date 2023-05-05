@@ -5,9 +5,9 @@ from pathlib import Path
 import pandas as pd  # type: ignore
 
 from ta_workflow.config_parser import YAML_CONFIG
+from ta_workflow.path import PROJECT_ROOT
 from ta_workflow.student import Student, parse_and_validate_student_data
 
-PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 OS = "windows-based" if sys.platform.startswith("win") else "unix-based"
 
 

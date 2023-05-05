@@ -6,7 +6,8 @@ from typing import Generator
 import pytest
 from pytest import LogCaptureFixture
 
-from ta_workflow.utils import LOG_PATH, timer_decorator
+from ta_workflow.path import LOG_PATH
+from ta_workflow.utils import timer_decorator
 
 
 @pytest.mark.parametrize(

@@ -1,12 +1,9 @@
-from pathlib import Path
-
 import pandas as pd  # type: ignore
 from pydantic import BaseModel
 from unidecode import unidecode
 
 from ta_workflow.config_parser import YAML_CONFIG
-
-PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
+from ta_workflow.path import PROJECT_ROOT
 
 
 class Student(BaseModel):

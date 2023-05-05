@@ -1,14 +1,11 @@
 import logging
 import subprocess
-from pathlib import Path
 
 from fuzzywuzzy import process  # type: ignore
 from unidecode import unidecode
 
-from ta_workflow.config_parser import YAML_CONFIG
+from ta_workflow.path import PROJECT_ROOT
 from ta_workflow.student import Student
-
-PROJECT_ROOT = Path(YAML_CONFIG.project_root_path)
 
 
 def distribute_assignments(
