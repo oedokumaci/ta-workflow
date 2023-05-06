@@ -216,6 +216,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "pandas-stubs"
+version = "2.0.1.230501"
+requires_python = ">=3.8"
+summary = "Type annotations for pandas"
+dependencies = [
+    "types-pytz>=2022.1.1",
+]
+
+[[package]]
 name = "pdm"
 version = "2.5.3"
 requires_python = ">=3.7"
@@ -427,6 +436,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "types-pytz"
+version = "2023.3.0.0"
+summary = "Typing stubs for pytz"
+
+[[package]]
 name = "types-pyyaml"
 version = "6.0.12.9"
 summary = "Typing stubs for PyYAML"
@@ -478,7 +492,7 @@ summary = "Library to create spreadsheet files compatible with MS Excel 97/2000/
 [metadata]
 lock_version = "4.2"
 groups = ["default", "test", "workflow"]
-content_hash = "sha256:45ed38bf7cdc0baa5b59762d8606b59654f3a14bc896c5796ffb559039e2a5a4"
+content_hash = "sha256:04f34578deb855cb93e3b16a37431a2927e90b4cb5c24144317c352586fb3522"
 
 [metadata.files]
 "blinker 1.6.2" = [
@@ -906,6 +920,10 @@ content_hash = "sha256:45ed38bf7cdc0baa5b59762d8606b59654f3a14bc896c5796ffb55903
     {url = "https://files.pythonhosted.org/packages/e1/4d/3eb96e53a9208350ee21615f850c4be9a246d32bf1d34cd36682cb58c3b7/pandas-1.5.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9f69c4029613de47816b1bb30ff5ac778686688751a5e9c99ad8c7031f6508e5"},
     {url = "https://files.pythonhosted.org/packages/e2/24/a26af514113fd5eca2d8fe41ba4f22f70dfe6afefde4a6beb6a203570935/pandas-1.5.3-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:6973549c01ca91ec96199e940495219c887ea815b2083722821f1d7abfa2b4dc"},
 ]
+"pandas-stubs 2.0.1.230501" = [
+    {url = "https://files.pythonhosted.org/packages/1c/5a/b39ae497a6fd4fe5b2ee2bca1d3be61972d3e9c8c6b9e23e4ab14c025610/pandas_stubs-2.0.1.230501-py3-none-any.whl", hash = "sha256:7ffc6528290df44881d1d78b7239161ba203e4b6570b71949fc4a4e5eabca8a5"},
+    {url = "https://files.pythonhosted.org/packages/4a/0c/64222f3af8de57623ce3750248ab08fff2b68c72f6ab7c914f3221f1f3ae/pandas_stubs-2.0.1.230501.tar.gz", hash = "sha256:2faf2c08ecfd8f5b82823279e06818d92eb642079e73d93921779bad69bd4cb0"},
+]
 "pdm 2.5.3" = [
     {url = "https://files.pythonhosted.org/packages/41/7c/ee911b8e1d2403693708860943ff252294b1a59fed7c1952ed20da4f5531/pdm-2.5.3.tar.gz", hash = "sha256:b88b134ffdfc7100e981bbedc44b499e3d781666c3c12ee6ec2faddabbf7969d"},
     {url = "https://files.pythonhosted.org/packages/d3/85/b0dc4d73f8d78dff689770215aad9598e84f403e5467c64d91ab72e6bd87/pdm-2.5.3-py3-none-any.whl", hash = "sha256:991dad2dcde433dc0448d971a05f0115f062e1ae175db853bda976dbfee98d93"},
@@ -1167,6 +1185,10 @@ content_hash = "sha256:45ed38bf7cdc0baa5b59762d8606b59654f3a14bc896c5796ffb55903
 "typer 0.9.0" = [
     {url = "https://files.pythonhosted.org/packages/5b/49/39f10d0f75886439ab3dac889f14f8ad511982a754e382c9b6ca895b29e9/typer-0.9.0.tar.gz", hash = "sha256:50922fd79aea2f4751a8e0408ff10d2662bd0c8bbfa84755a699f3bada2978b2"},
     {url = "https://files.pythonhosted.org/packages/bf/0e/c68adf10adda05f28a6ed7b9f4cd7b8e07f641b44af88ba72d9c89e4de7a/typer-0.9.0-py3-none-any.whl", hash = "sha256:5d96d986a21493606a358cae4461bd8cdf83cbf33a5aa950ae629ca3b51467ee"},
+]
+"types-pytz 2023.3.0.0" = [
+    {url = "https://files.pythonhosted.org/packages/5f/23/3111adc23d3ceb0fa233853ae3c4837aa9adfc5108ec5eed0c60ffc76992/types-pytz-2023.3.0.0.tar.gz", hash = "sha256:ecdc70d543aaf3616a7e48631543a884f74205f284cefd6649ddf44c6a820aac"},
+    {url = "https://files.pythonhosted.org/packages/84/69/cd7391875e53fe4d108f53417af51fb1720f3a48b30263db524aaf3e8141/types_pytz-2023.3.0.0-py3-none-any.whl", hash = "sha256:4fc2a7fbbc315f0b6630e0b899fd6c743705abe1094d007b0e612d10da15e0f3"},
 ]
 "types-pyyaml 6.0.12.9" = [
     {url = "https://files.pythonhosted.org/packages/05/6f/f19081de5ba81864f89e354560a60637822f7d6d54d9a2a907785e9b5cc4/types-PyYAML-6.0.12.9.tar.gz", hash = "sha256:c51b1bd6d99ddf0aa2884a7a328810ebf70a4262c292195d3f4f9a0005f9eeb6"},

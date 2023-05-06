@@ -29,6 +29,7 @@ numpy==1.24.3
 openpyxl==3.1.2
 packaging==23.0
 pandas==1.5.3
+pandas-stubs==2.0.1.230501
 pdm==2.5.3
 platformdirs==3.1.1
 pluggy==1.0.0
@@ -54,6 +55,7 @@ six==1.16.0
 tomli==2.0.1
 tomlkit==0.11.8
 typer==0.9.0
+types-pytz==2023.3.0.0
 types-PyYAML==6.0.12.9
 typing-extensions==4.5.0
 unearth==0.9.0
