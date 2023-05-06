@@ -1,0 +1,8 @@
+project_root_path: project/root/path  # absolute path to the project root
+student_data_file_name: classRoster.xls  # name of the file with student data, must be in project root
+number_of_homeworks: 2  # number of homeworks so far
+number_of_quizzes: 1  # number of quizzes so far
+email_frequency_in_seconds: 10 # sleep time between each email
+google_drive_path: path/to/your/google/drive/folder  # absolute path to your google drive folder
+course_code: ECONXYZ
+ta_name: Your_Name

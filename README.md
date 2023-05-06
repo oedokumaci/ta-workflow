@@ -36,7 +36,7 @@ to install the package locally. After downloading, here are the steps to install
 
 ### Configuration
 
-First add and edit a `./config/config.yaml` to your liking. Example config file can be found at `./config/example_config.yaml`.
+First edit the `./config/config.yaml` to your liking. Example config file can be found at `./config/example_config.yaml`.
 
 ### Quick Start
 
