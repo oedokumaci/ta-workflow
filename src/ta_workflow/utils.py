@@ -11,6 +11,8 @@ from pathlib import Path
 from time import time
 from typing import Callable, ParamSpec, TypeVar
 
+import typer
+
 from ta_workflow.config_parser import YAML_CONFIG
 from ta_workflow.path import LOG_PATH
 from ta_workflow.student import Student, parse_and_validate_student_data
@@ -174,3 +176,15 @@ def prepare() -> tuple[list[Student], list[str], list[str]]:
     QUIZZES_SO_FAR = [f"Quiz_{i}" for i in range(1, YAML_CONFIG.number_of_quizzes + 1)]
     init_logger()
     return STUDENTS, HOMEWORKS_SO_FAR, QUIZZES_SO_FAR
+
+
+def get_students_and_selected_assignments(
+    function_job: str,
+) -> tuple[list[Student], list[str]]:
+    students, homeworks, quizzes = prepare()
+    assignments = homeworks + quizzes
+    selected_assignments = []
+    for assignment in assignments:
+        if typer.confirm(f"Do you want to {function_job} {assignment}?"):
+            selected_assignments.append(assignment)
+    return students, selected_assignments

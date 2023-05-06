@@ -2,7 +2,7 @@
 
 import typer
 
-from ta_workflow.utils import prepare
+from ta_workflow.utils import get_students_and_selected_assignments
 
 app = typer.Typer()
 
@@ -24,11 +24,6 @@ def distribute(
     """Distribute the assignments into their respective directories."""
     from ta_workflow.distribute_assignments import distribute_assignments
 
-    students, homeworks, quizzes = prepare()
-    assignments = homeworks + quizzes
-    selected_assignments = []
-    for assignment in assignments:
-        if typer.confirm(f"Would you like to distribute {assignment}?"):
-            selected_assignments.append(assignment)
+    students, selected_assignments = get_students_and_selected_assignments("distribute")
 
     distribute_assignments(students, selected_assignments, copy, score_threshold)
