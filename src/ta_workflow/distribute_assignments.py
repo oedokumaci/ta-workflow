@@ -39,7 +39,7 @@ def distribute_assignments(
                         subprocess.run(
                             [
                                 "cp",
-                                file.resolve(),
+                                file,
                                 PROJECT_ROOT
                                 / (
                                     best_match_student.last_name
@@ -47,7 +47,9 @@ def distribute_assignments(
                                     + best_match_student.bilkent_id
                                 )
                                 / assignment_name,
-                            ]
+                            ],
+                            check=False,
+                            shell=True,
                         )
                 else:
                     logging.info(

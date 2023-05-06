@@ -45,7 +45,8 @@ def grades_to_excel(
                         "mklink",
                         str(sym_link_to_original.resolve()),
                         str(original_file.resolve()),
-                    ]
+                    ],
+                    check=False,
                 )
             else:
                 subprocess.run(
@@ -54,7 +55,8 @@ def grades_to_excel(
                         "-s",
                         str(original_file.resolve()),
                         str(sym_link_to_original.resolve()),
-                    ]
+                    ],
+                    check=False,
                 )
             logging.info(
                 f"Created symbolic link for {assignment} at {sym_link_to_original}"
