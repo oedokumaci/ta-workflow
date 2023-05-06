@@ -8,8 +8,28 @@ CONFIG_DIR: Path = Path(__file__).parents[2] / "config"
 
 
 class YAMLConfig(BaseModel):
-    """Parses and validates the contents of config.yaml file.
+    """
+    Parses and validates the contents of config.yaml file.
     Inherits from pydantic BaseModel.
+
+    Attributes:
+    -----------
+    project_root_path : str
+        The path to the root directory of the project.
+    student_data_file_name : str
+        The name of the student data file.
+    number_of_homeworks : int
+        The number of homework assignments in the course.
+    number_of_quizzes : int
+        The number of quizzes in the course.
+    email_frequency_in_seconds : float
+        The frequency (in seconds) at which to send reminder emails.
+    google_drive_path : str
+        The path to the Google Drive folder for the course.
+    course_code : str
+        The code for the course.
+    ta_name : str
+        The name of the TA for the course.
     """
 
     project_root_path: str
@@ -21,6 +41,7 @@ class YAMLConfig(BaseModel):
     course_code: str
     ta_name: str
 
+    # Validators to check that the configuration settings are valid
     @validator("student_data_file_name")
     def student_data_file_name_must_be_valid(cls, v: str) -> str:
         if not v.endswith(".xls") and not v.endswith(".csv"):
@@ -61,7 +82,13 @@ class YAMLConfig(BaseModel):
 
 
 def parse_and_validate_configs() -> YAMLConfig:
-    """Parses and validates the contents of config files in config directory."""
+    """
+    Parses and validates the contents of the config file in the config directory.
+
+    Returns:
+    --------
+    An instance of the YAMLConfig class with the validated configuration settings.
+    """
 
     with open(CONFIG_DIR / "config.yaml") as yaml_file:
         yaml_config: dict[str, str] = yaml.safe_load(yaml_file)
