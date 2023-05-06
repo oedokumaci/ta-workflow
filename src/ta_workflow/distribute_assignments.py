@@ -9,7 +9,10 @@ from ta_workflow.student import Student
 
 
 def distribute_assignments(
-    students: list[Student], assignment_names: list[str], copy: bool = False
+    students: list[Student],
+    assignment_names: list[str],
+    copy: bool = False,
+    score_threshold: int = 35,
 ) -> None:
     students_full_names = {
         student.first_name + " " + student.last_name: student for student in students
@@ -22,7 +25,7 @@ def distribute_assignments(
                 unidecode(file.name), students_full_names.keys()
             )
             best_match_student = students_full_names[best_match]
-            if score < 35:
+            if score < score_threshold:
                 logging.info(
                     f"Could not find a match for {unidecode(file.name):<41} {'-----':<15} {'-----':<10} Similarity Score: {'--'}"
                 )
