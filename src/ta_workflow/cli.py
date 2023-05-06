@@ -64,3 +64,13 @@ def make_dirs() -> None:
 
     make_project_dir(students, homeworks + quizzes)
     logging.info("Creating directories finished.")
+
+
+@app.command()
+def split_pdf() -> None:
+    """Split a pdf file into individual pages."""
+    from ta_workflow.pdf_splitter import get_input, split_pdf
+
+    file_path, pages = get_input()
+    split_pdf(file_path, pages)
+    print("Splitting pdf finished.")  # logger not initialized for this module
