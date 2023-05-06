@@ -34,7 +34,9 @@ class Student(BaseModel):
     withdraw_fz: bool
 
     def __hash__(self) -> int:
-        # Since bilkent_id is unique, we can use it as a hash
+        """
+        Returns a unique hash value for each instance of the class based on the bilkent_id attribute.
+        """
         return hash(self.bilkent_id)
 
 
@@ -79,8 +81,12 @@ def parse_and_validate_student_data(resave: bool = False) -> list[Student]:
         )
 
         # fix data
-        df["withdraw_fz"] = df["withdraw_fz"].fillna(False)
-        df["first_name"] = df["first_name"].apply(unidecode)
+        df["withdraw_fz"] = df["withdraw_fz"].fillna(
+            False
+        )  # Replace NaN values with False for withdraw_fz column
+        df["first_name"] = df["first_name"].apply(
+            unidecode
+        )  # Convert accented characters to ASCII
         df["last_name"] = df["last_name"].apply(unidecode)
 
         # If resave is True, save the fixed Excel file
