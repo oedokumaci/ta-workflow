@@ -1,12 +1,6 @@
 <div align="center">
 
-<!-- Provide information on your repository here. -->
-
-ta-workflow
-
-<!-- <img src=./style/repo.png width="800"> -->
-
-&nbsp;
+This is a CLI tool that helps me manage my TA duties. Feel free to use it for your own TAing purposes.
 
 ![Tests](https://github.com/oedokumaci/ta-workflow/actions/workflows/tests.yml/badge.svg)
 ![Quality](https://github.com/oedokumaci/ta-workflow/actions/workflows/quality.yml/badge.svg)
@@ -42,7 +36,7 @@ to install the package locally. After downloading, here are the steps to install
 
 ### Configuration
 
-First edit the `./config/config.yaml` to your liking. Example config files can be found at `./config/`.
+First add and edit a `./config/config.yaml` to your liking. Example config file can be found at `./config/example_config.yaml`.
 
 ### Quick Start
 
@@ -56,6 +50,10 @@ For a list of all the CLI arguments and options, run
 ```bash
 pdm run python -m ta_workflow --help
 ```
+
+Here is a screenshot of the help message.
+
+<img src=./style/cli.png width="800">
 
 &nbsp;
 
