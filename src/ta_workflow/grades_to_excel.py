@@ -35,9 +35,9 @@ def grades_to_excel(
             Path(__file__).parents[2] / "outputs" / f"{assignment}.xls"
         )
         pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
-            str(original_file), header=False
+            str(original_file.resolve()), header=False
         )
-        logging.info(f"Created excel for {assignment} {original_file.resolve()}")
+        logging.info(f"Created excel for {assignment} at {original_file.resolve()}")
         if sym_link:
             if OS == "windows-based":
                 subprocess.run(
@@ -57,7 +57,7 @@ def grades_to_excel(
                     ]
                 )
             logging.info(
-                f"Created symbolic link for {assignment} {sym_link_to_original.resolve()}"
+                f"Created symbolic link for {assignment} at {sym_link_to_original}"
             )
         else:
             logging.info(f"No symbolic link for {assignment} is created")
