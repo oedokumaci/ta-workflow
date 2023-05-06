@@ -92,11 +92,11 @@ def send_grades(
 ) -> None:
     user_input = (
         input(
-            f"Do you want to send grades for {', '.join(assignment_names)}? [Y/n]: "
+            f"Do you want to send grades for {', '.join(assignment_names)}? [y/N]: "
         ).lower()
-        or "y"
+        or "n"
     )
-    if user_input == "n":
+    if user_input != "y":
         return
     for assignment in assignment_names:
         print(f"Sending {assignment} grades...")
