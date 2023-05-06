@@ -1,3 +1,4 @@
+import logging
 import os
 import subprocess
 from pathlib import Path
@@ -9,7 +10,7 @@ from unidecode import unidecode
 
 from ta_workflow.config_parser import YAML_CONFIG
 from ta_workflow.path import PROJECT_ROOT
-from ta_workflow.student import Student, parse_and_validate_student_data
+from ta_workflow.student import Student
 from ta_workflow.utils import send_email
 
 SEND_EVERY_N_SECONDS = (
@@ -99,7 +100,7 @@ def send_grades(
     if user_input != "y":
         return
     for assignment in assignment_names:
-        print(f"Sending {assignment} grades...")
+        logging.info(f"Sending {assignment} grades...")
         sleep(
             SEND_EVERY_N_SECONDS
         )  # gives time to interrupt the program without sending the first email
@@ -131,14 +132,16 @@ def send_grades(
                 if f.endswith(".pdf")
             ]
             if len(files_path) == 0:
-                print(f"No pdf files found for {student.email} in {assignment_dir}")
+                logging.info(
+                    f"No pdf files found for {student.email} in {assignment_dir}"
+                )
                 body = EmailBody(
                     assignment.replace("_", " "), student, student_grade, summary_stats
                 ).get_no_attachment_email_body()
                 send_email(user, password, from_addr, to_addr, subject, body)
             else:
                 try:
-                    print(f"Email sent successfully to {student.email}")
+                    logging.info(f"Email sent successfully to {student.email}")
                     body = EmailBody(
                         assignment.replace("_", " "),
                         student,
@@ -149,7 +152,9 @@ def send_grades(
                         user, password, from_addr, to_addr, subject, body, files_path
                     )
                 except SMTPSenderRefused:
-                    print(f"Could not send email to {student.email}, file is too large")
+                    logging.error(
+                        f"Could not send email to {student.email}, file is too large"
+                    )
                     body = EmailBody(
                         assignment.replace("_", " "),
                         student,
@@ -165,15 +170,9 @@ def send_grades(
                     )
                     google_drive_folder.mkdir(parents=True, exist_ok=True)
                     for file in files_path:
-                        subprocess.run(["cp", file, google_drive_folder])
+                        subprocess.run(
+                            ["cp", file, google_drive_folder], check=False, shell=True
+                        )
+                    logging.info(f"Files copied to {google_drive_folder}")
             sleep(SEND_EVERY_N_SECONDS)
-    print("Done!")
-
-
-if __name__ == "__main__":
-    STUDENTS = parse_and_validate_student_data()
-    HOMEWORKS_SO_FAR = [
-        f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
-    ]
-    QUIZZES_SO_FAR = [f"Quiz_{i}" for i in range(1, YAML_CONFIG.number_of_quizzes + 1)]
-    send_grades(STUDENTS, HOMEWORKS_SO_FAR[2:] + QUIZZES_SO_FAR[1:])
+    logging.info("Done!")

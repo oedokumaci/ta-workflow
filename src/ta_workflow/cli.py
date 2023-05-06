@@ -74,3 +74,16 @@ def split_pdf() -> None:
     file_path, pages = get_input()
     split_pdf(file_path, pages)
     print("Splitting pdf finished.")  # logger not initialized for this module
+
+
+@app.command()
+def send_emails() -> None:
+    """Send the grades to the students."""
+    from ta_workflow.send_grades import send_grades
+
+    students, selected_assignments = get_students_and_selected_assignments(
+        "send email for"
+    )
+
+    send_grades(students, selected_assignments)
+    logging.info("Sending grades finished.")
