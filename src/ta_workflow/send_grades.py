@@ -13,18 +13,20 @@ from ta_workflow.path import PROJECT_ROOT
 from ta_workflow.student import Student
 from ta_workflow.utils import send_email
 
-SEND_EVERY_N_SECONDS = (
-    YAML_CONFIG.email_frequency_in_seconds
-)  # to avoid too much email error
+# to avoid sending too many emails in a short period of time
+SEND_EVERY_N_SECONDS = YAML_CONFIG.email_frequency_in_seconds
 USER, PASSWORD = os.environ["bilkent_email_credentials"].split(":")
-
-
+# Read the student data file into a pandas dataframe
 df = pd.read_excel(
     PROJECT_ROOT / (YAML_CONFIG.student_data_file_name.split(".")[0] + "_fixed.xlsx")
 )
 
 
 class EmailBody:
+    """
+    A class to construct different types of email bodies based on the email type.
+    """
+
     def __init__(
         self,
         assignment_name: str,
@@ -40,6 +42,12 @@ class EmailBody:
         self.ta_name = ta_name
 
     def get_email_body(self) -> str:
+        """
+        Get the email body for a regular email with attachments.
+
+        Returns:
+            str: The email body.
+        """
         return f"""Dear {self.student.first_name},
 
 Attached you can find your {self.assignment_name} feedback.
@@ -54,6 +62,12 @@ Best,
 """
 
     def get_no_attachment_email_body(self) -> str:
+        """
+        Get the email body for an email with no attachments.
+
+        Returns:
+            str: The email body.
+        """
         return f"""Dear {self.student.first_name},
 
 Your grade from {self.assignment_name} is {self.grade}/100.
@@ -68,6 +82,12 @@ Best,
 """
 
     def get_large_file_email_body(self) -> str:
+        """
+        Get the email body for an email with a Google Drive link instead of attachments.
+
+        Returns:
+            str: The email body.
+        """
         return f"""Dear {self.student.first_name},
 
 Your grade from {self.assignment_name} is {self.grade}/100.
@@ -91,6 +111,22 @@ def send_grades(
     from_addr: str = USER,
     course_code: str = YAML_CONFIG.course_code,
 ) -> None:
+    """
+    Send feedback emails to students with their grades and a summary of statistics.
+
+    Args:
+        students (list[Student]): A list of
+        `Student` objects.
+        assignment_names (list[str]): A list of assignment names to send grades for.
+        user (str, optional): The email address of the sender. Defaults to USER.
+        password (str, optional): The password of the sender. Defaults to PASSWORD.
+        from_addr (str, optional): The email address of the sender. Defaults to USER.
+        course_code (str, optional): The course code. Defaults to YAML_CONFIG.course_code.
+
+    Returns:
+        None
+    """
+    # Confirm if the user wants to send the emails
     user_input = (
         input(
             f"Do you want to send grades for {', '.join(assignment_names)}? [y/N]: "
@@ -99,6 +135,7 @@ def send_grades(
     )
     if user_input != "y":
         return
+    # Send emails for each assignment and each student
     for assignment in assignment_names:
         logging.info(f"Sending {assignment} grades...")
         sleep(
@@ -110,6 +147,7 @@ def send_grades(
         )
         for student in students:
             to_addr = [student.email]
+            # Get the student's grade for the assignment from the dataframe
             student_grade = df[df["bilkent_id"] == int(student.bilkent_id)][
                 assignment
             ].values[0]
@@ -120,17 +158,19 @@ def send_grades(
                 for f in os.listdir(assignment_dir)
                 if f.endswith(".pdf")
             ]
-            # fix messy file paths
+            # Fix the messy file paths
             for file_path in files_path_messy:
                 new_name = unidecode(
                     file_path.name.replace(" ", "_").replace("/", "_").replace("-", "")
                 )
                 file_path.rename(file_path.parent / new_name)
+            # Get the file paths for the attachments
             files_path = [
                 str((assignment_dir / f).resolve())
                 for f in os.listdir(assignment_dir)
                 if f.endswith(".pdf")
             ]
+            # Handle cases where there are no files or the files are too large
             if len(files_path) == 0:
                 logging.info(
                     f"No pdf files found for {student.email} in {assignment_dir}"
@@ -162,7 +202,7 @@ def send_grades(
                         summary_stats,
                     ).get_large_file_email_body()
                     send_email(user, password, from_addr, to_addr, subject, body)
-                    # copy files to google drive
+                    # Copy files to Google Drive
                     google_drive_folder = (
                         Path(YAML_CONFIG.google_drive_path)
                         / (student.last_name + "_" + student.bilkent_id)
