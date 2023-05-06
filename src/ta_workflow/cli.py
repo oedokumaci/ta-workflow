@@ -1,8 +1,10 @@
 """Command line application module."""
 
+import logging
+
 import typer
 
-from ta_workflow.utils import get_students_and_selected_assignments
+from ta_workflow.utils import get_students_and_selected_assignments, prepare
 
 app = typer.Typer()
 
@@ -31,7 +33,13 @@ def distribute(
 
     students, selected_assignments = get_students_and_selected_assignments("distribute")
 
-    distribute_assignments(students, selected_assignments, copy, score_threshold)
+    try:
+        distribute_assignments(students, selected_assignments, copy, score_threshold)
+    except FileNotFoundError:
+        logging.error(
+            "Could not find the assignments directory. Run `make_dirs` first."
+        )
+    logging.info("Distributing assignments finished.")
 
 
 @app.command()
@@ -44,3 +52,15 @@ def excel(sym_link: bool = sym_link_option) -> None:
     )
 
     grades_to_excel(students, selected_assignments, sym_link)
+    logging.info("Creating excel files finished.")
+
+
+@app.command()
+def make_dirs() -> None:
+    """Create the directories for each student and assignment. If the directories already exist, it will not overwrite them."""
+    from ta_workflow.make_project_dir import make_project_dir
+
+    students, homeworks, quizzes = prepare()
+
+    make_project_dir(students, homeworks + quizzes)
+    logging.info("Creating directories finished.")
