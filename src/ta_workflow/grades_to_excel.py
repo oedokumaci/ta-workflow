@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import sys
 from pathlib import Path
@@ -6,12 +7,18 @@ import pandas as pd  # type: ignore
 
 from ta_workflow.config_parser import YAML_CONFIG
 from ta_workflow.path import PROJECT_ROOT
-from ta_workflow.student import Student, parse_and_validate_student_data
+from ta_workflow.student import Student
+
+pd.options.io.excel.xls.writer = (
+    "xlwt"  # set the option to 'xlwt' to suppress the .xls warning
+)
 
 OS = "windows-based" if sys.platform.startswith("win") else "unix-based"
 
 
-def grades_to_excel(students: list[Student], assignment_names: list[str]) -> None:
+def grades_to_excel(
+    students: list[Student], assignment_names: list[str], sym_link: bool = True
+) -> None:
     df = pd.read_excel(
         PROJECT_ROOT
         / (YAML_CONFIG.student_data_file_name.split(".")[0] + "_fixed.xlsx")
@@ -23,21 +30,34 @@ def grades_to_excel(students: list[Student], assignment_names: list[str]) -> Non
                 assignment
             ].values[0]
             assignment_data[student.bilkent_id] = round(student_grade, 2)
-        original = PROJECT_ROOT / f"{assignment}.xls"  # AIRS want .xls not .xlsx
-        sym_link = Path(__file__).parents[2] / "outputs" / f"{assignment}.xls"
-        pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
-            str(original), header=False
+        original_file = PROJECT_ROOT / f"{assignment}.xls"  # AIRS want .xls not .xlsx
+        sym_link_to_original = (
+            Path(__file__).parents[2] / "outputs" / f"{assignment}.xls"
         )
-        if OS == "windows-based":
-            subprocess.run(["mklink", str(sym_link), str(original)], shell=True)
+        pd.DataFrame.from_dict(assignment_data, orient="index").to_excel(
+            str(original_file), header=False
+        )
+        logging.info(f"Created excel for {assignment} {original_file.resolve()}")
+        if sym_link:
+            if OS == "windows-based":
+                subprocess.run(
+                    [
+                        "mklink",
+                        str(sym_link_to_original.resolve()),
+                        str(original_file.resolve()),
+                    ]
+                )
+            else:
+                subprocess.run(
+                    [
+                        "ln",
+                        "-s",
+                        str(original_file.resolve()),
+                        str(sym_link_to_original.resolve()),
+                    ]
+                )
+            logging.info(
+                f"Created symbolic link for {assignment} {sym_link_to_original.resolve()}"
+            )
         else:
-            subprocess.run(["ln", "-s", str(original), str(sym_link)], shell=True)
-
-
-if __name__ == "__main__":
-    STUDENTS = parse_and_validate_student_data()
-    HOMEWORKS_SO_FAR = [
-        f"Homework_{i}" for i in range(1, YAML_CONFIG.number_of_homeworks + 1)
-    ]
-    QUIZZES_SO_FAR = [f"Quiz_{i}" for i in range(1, YAML_CONFIG.number_of_quizzes + 1)]
-    grades_to_excel(STUDENTS, HOMEWORKS_SO_FAR + QUIZZES_SO_FAR)
+            logging.info(f"No symbolic link for {assignment} is created")

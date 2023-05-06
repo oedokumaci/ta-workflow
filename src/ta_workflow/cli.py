@@ -16,6 +16,11 @@ score_threshold_argument = typer.Argument(
     help="The minimum similarity score for a match to be considered valid.",
 )
 
+sym_link_option = typer.Option(
+    True,
+    help="Create a symbolic link of the output excel in the output directory. Original excel is saved in the project root.",
+)
+
 
 @app.command()
 def distribute(
@@ -27,3 +32,15 @@ def distribute(
     students, selected_assignments = get_students_and_selected_assignments("distribute")
 
     distribute_assignments(students, selected_assignments, copy, score_threshold)
+
+
+@app.command()
+def excel(sym_link: bool = sym_link_option) -> None:
+    """Create excel files for each assignment to be uploaded to AIRS."""
+    from ta_workflow.grades_to_excel import grades_to_excel
+
+    students, selected_assignments = get_students_and_selected_assignments(
+        "save to excel"
+    )
+
+    grades_to_excel(students, selected_assignments, sym_link)
