@@ -102,3 +102,12 @@ def send_emails() -> None:
 
     send_grades(students, selected_assignments)
     logging.info("Sending grades finished.")
+
+
+@app.command()
+def summarize() -> None:
+    """Summarize the grades."""
+    from ta_workflow.summarize import summarize_data
+
+    summarize_data()
+    logging.info("Summarizing done.")
