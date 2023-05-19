@@ -45,6 +45,8 @@ def distribute_assignments(
     for assignment_name in assignment_names:
         assignment_dir = PROJECT_ROOT / assignment_name
         for file in assignment_dir.iterdir():
+            if not file.is_file() or not file.name.endswith(".pdf"):
+                continue
             # Find the best match for the filename in the dictionary of student full names
             best_match, score = process.extractOne(
                 unidecode(file.name), students_full_names.keys()
@@ -69,20 +71,20 @@ def distribute_assignments(
 
                 # If copy is True, copy the file to the Student's directory
                 if copy:
+                    source_file = str(file)
+                    destination_file = str(
+                        PROJECT_ROOT
+                        / f"{best_match_student.last_name}_{best_match_student.bilkent_id}"
+                        / assignment_name
+                        / file.name
+                    )
                     subprocess.run(
                         [
                             "cp",
-                            file,
-                            PROJECT_ROOT
-                            / (
-                                best_match_student.last_name
-                                + "_"
-                                + best_match_student.bilkent_id
-                            )
-                            / assignment_name,
+                            source_file,
+                            destination_file,
                         ],
-                        check=False,
-                        shell=True,
+                        check=True,
                     )
 
             # If the Student has already been matched, log a message and continue to the next file

@@ -204,15 +204,13 @@ def send_grades(
                     send_email(user, password, from_addr, to_addr, subject, body)
                     # Copy files to Google Drive
                     google_drive_folder = (
-                        Path(YAML_CONFIG.google_drive_path)
+                        Path(YAML_CONFIG.google_drive_path).resolve().expanduser()
                         / (student.last_name + "_" + student.bilkent_id)
                         / assignment
                     )
                     google_drive_folder.mkdir(parents=True, exist_ok=True)
                     for file in files_path:
-                        subprocess.run(
-                            ["cp", file, google_drive_folder], check=False, shell=True
-                        )
+                        subprocess.run(["cp", file, google_drive_folder], check=False)
                     logging.info(f"Files copied to {google_drive_folder}")
             sleep(SEND_EVERY_N_SECONDS)
     logging.info("Done!")
