@@ -44,12 +44,26 @@ def distribute_assignments(
     # Iterate over the assignment names and the files in their directories
     for assignment_name in assignment_names:
         assignment_dir = PROJECT_ROOT / assignment_name
-        for file in assignment_dir.iterdir():
-            if not file.is_file() or not file.name.endswith(".pdf"):
+        moodle_dir = False
+        for iterd in assignment_dir.iterdir():
+            if iterd.is_dir():
+                pdfs = list(iterd.glob("*.pdf"))
+                if len(pdfs) == 1:
+                    moodle_dir = True
+                    file = pdfs[0]
+                else:
+                    continue
+            elif not iterd.is_file() or not iterd.name.endswith(".pdf"):
                 continue
+            else:
+                file = iterd
+            if moodle_dir:
+                query = iterd.name + " " + file.name
+            else:
+                query = file.name
             # Find the best match for the filename in the dictionary of student full names
             best_match, score = process.extractOne(
-                unidecode(file.name), students_full_names.keys()
+                unidecode(query), students_full_names.keys()
             )
 
             # If the similarity score is less than the threshold, log a message and continue to the next file
@@ -93,3 +107,7 @@ def distribute_assignments(
                     f"{best_match_student.first_name} {best_match_student.last_name} is already matched"
                 )
                 continue
+        if moodle_dir:
+            logging.info(
+                "The assignments directory was a moodle directory, matched also using the directory name."
+            )
