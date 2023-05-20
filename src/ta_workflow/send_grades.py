@@ -181,7 +181,6 @@ def send_grades(
                 send_email(user, password, from_addr, to_addr, subject, body)
             else:
                 try:
-                    logging.info(f"Email sent successfully to {student.email}")
                     body = EmailBody(
                         assignment.replace("_", " "),
                         student,
@@ -191,10 +190,12 @@ def send_grades(
                     send_email(
                         user, password, from_addr, to_addr, subject, body, files_path
                     )
+                    logging.info(f"Email sent successfully to {student.email}")
                 except SMTPSenderRefused:
                     logging.error(
                         f"Could not send email to {student.email}, file is too large"
                     )
+                    sleep(SEND_EVERY_N_SECONDS)
                     body = EmailBody(
                         assignment.replace("_", " "),
                         student,
