@@ -51,7 +51,7 @@ class EmailBody:
         return f"""Dear {self.student.first_name},
 
 Attached you can find your {self.assignment_name} feedback.
-Your grade is {self.grade}/100.
+Your grade is {self.grade}.
 
 Here are some summary statistics for {self.assignment_name}:
 {self.summary_stats}
@@ -70,7 +70,7 @@ Best,
         """
         return f"""Dear {self.student.first_name},
 
-Your grade from {self.assignment_name} is {self.grade}/100.
+Your grade from {self.assignment_name} is {self.grade}.
 It looks like you did not submit any files. If you think this is a mistake, please reply to this email.
 
 Here are some summary statistics for {self.assignment_name}:
@@ -90,7 +90,7 @@ Best,
         """
         return f"""Dear {self.student.first_name},
 
-Your grade from {self.assignment_name} is {self.grade}/100.
+Your grade from {self.assignment_name} is {self.grade}.
 
 Here are some summary statistics for {self.assignment_name}:
 {self.summary_stats}
