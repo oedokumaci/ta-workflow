@@ -63,15 +63,12 @@ def get_input() -> tuple[str, list[tuple[int, int]]]:
                 print("Select a PDF file to split:")
                 for i, pdf_file in enumerate(pdf_files):
                     print(f"{i+1}: {pdf_file}")
-                while True:
-                    selection = input("Enter the number of the PDF file to split: ")
-                    if not selection.isdigit() or not 1 <= int(selection) <= len(
-                        pdf_files
-                    ):
-                        print(f"Invalid selection: {selection}")
-                    else:
-                        file_path = str(pdf_files[int(selection) - 1])
-                        break
+                selection = int(input("Enter the number of the PDF file to split: "))
+                if not 1 <= selection <= len(pdf_files):
+                    print(f"Invalid selection: {selection}")
+                else:
+                    file_path = str(pdf_files[selection - 1])
+                    break
         elif path.is_file():
             file_path = input_path
             break
@@ -85,7 +82,7 @@ def get_input() -> tuple[str, list[tuple[int, int]]]:
     while True:
         # Prompt the user to enter the page numbers to split
         page_input = input(
-            "Enter the page numbers to split, separated by a dash (or 'done' inputting is done): "
+            "Enter the page numbers to split: separated by a dash- endpoints included (enter 'done' when done): "
         )
         if page_input.lower() == "done":
             break
