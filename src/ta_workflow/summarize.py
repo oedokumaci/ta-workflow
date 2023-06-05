@@ -6,6 +6,8 @@ from ta_workflow.config_parser import YAML_CONFIG
 from ta_workflow.path import PROJECT_ROOT
 from ta_workflow.utils import init_logger
 
+pd.set_option("display.max_columns", None)
+
 
 def get_cols_after(df: pd.DataFrame, col_name: str) -> pd.Index:
     """
@@ -32,6 +34,8 @@ def summarize_data() -> None:
         PROJECT_ROOT
         / (YAML_CONFIG.student_data_file_name.split(".")[0] + "_fixed.xlsx")
     )
+
+    df.set_index("first_name", inplace=True)
 
     logging.info("Student data file:" + "\n" + str(df) + "\n")
 
