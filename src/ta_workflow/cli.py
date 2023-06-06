@@ -23,6 +23,8 @@ sym_link_option = typer.Option(
     help="Create a symbolic link of the output excel in the output directory. Original excel is saved in the project root.",
 )
 
+delete_option = typer.Option(False, help="Delete the directories and their contents.")
+
 
 @app.command()
 def distribute(
@@ -64,18 +66,26 @@ def excel(sym_link: bool = sym_link_option) -> None:
 
 
 @app.command()
-def make_dirs() -> None:
+def make_dirs(delete: bool = delete_option) -> None:
     """Create the directories for each student and assignment. If the directories already exist, it will not overwrite them."""
-    from ta_workflow.make_project_dir import make_project_dir
+    if delete:
+        from ta_workflow.make_project_dir import delete_project_dir_and_contents
 
-    # Get the students, homeworks, and quizzes.
-    students, homeworks, quizzes = prepare()
+        # Get the students and selected assignments.
+        students, selected_assignments = get_students_and_selected_assignments("delete")
+        # Delete the directories and their contents.
+        delete_project_dir_and_contents(students, selected_assignments)
+        # Log a message to indicate that the command has finished executing.
+        logging.info("Deleting directories finished.")
+    else:
+        from ta_workflow.make_project_dir import make_project_dir
 
-    # Call the function to create the directories.
-    make_project_dir(students, homeworks + quizzes)
-
-    # Log a message to indicate that the command has finished executing.
-    logging.info("Creating directories finished.")
+        # Get the students, homeworks, and quizzes.
+        students, homeworks, quizzes = prepare()
+        # Call the function to create the directories.
+        make_project_dir(students, homeworks + quizzes)
+        # Log a message to indicate that the command has finished executing.
+        logging.info("Creating directories finished.")
 
 
 @app.command()
