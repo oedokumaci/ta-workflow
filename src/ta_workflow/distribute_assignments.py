@@ -38,11 +38,11 @@ def distribute_assignments(
         student.first_name + " " + student.last_name: student for student in students
     }
 
-    # Create a dictionary of students mapped to the number of files they are matched to
-    matched_students = {student: 0 for student in students}
-
     # Iterate over the assignment names and the files in their directories
     for assignment_name in assignment_names:
+        # Create a dictionary of students mapped to the number of files they are matched to
+        matched_students = {student: 0 for student in students}
+
         assignment_dir = PROJECT_ROOT / assignment_name
         moodle_dir = False
         for iterd in assignment_dir.iterdir():
