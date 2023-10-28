@@ -52,17 +52,17 @@ class YAMLConfig(BaseModel):
 
     @validator("number_of_homeworks")
     def number_of_homeworks_must_be_valid(cls, v: int) -> int:
-        if v < 1:
+        if v < 0:
             raise ValueError(
-                f"number_of_homeworks must be a positive integer, {v} is not"
+                f"number_of_homeworks must be a nonnegative integer, {v} is not"
             )
         return v
 
     @validator("number_of_quizzes")
     def number_of_quizzes_must_be_valid(cls, v: int) -> int:
-        if v < 1:
+        if v < 0:
             raise ValueError(
-                f"number_of_quizzes must be a positive integer, {v} is not"
+                f"number_of_quizzes must be a nonnegative integer, {v} is not"
             )
         return v
 
