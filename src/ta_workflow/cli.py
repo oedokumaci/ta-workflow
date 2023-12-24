@@ -3,6 +3,7 @@
 import logging
 
 import typer
+from rich import print as rprint
 
 from ta_workflow.utils import get_students_and_selected_assignments, prepare
 
@@ -98,7 +99,7 @@ def split_pdf() -> None:
 
     # Call the function to split the pdf file.
     split_pdf(file_path, pages)
-    print("Splitting pdf finished.")  # logger not initialized for this module
+    rprint("Splitting pdf finished.")  # logger not initialized for this module
 
 
 @app.command()

@@ -2,7 +2,6 @@
 
 import logging
 import smtplib
-import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -12,6 +11,7 @@ from time import time
 from typing import Callable, ParamSpec, TypeVar
 
 import typer
+from rich.logging import RichHandler
 
 from ta_workflow.config_parser import YAML_CONFIG
 from ta_workflow.path import LOG_PATH
@@ -64,9 +64,11 @@ def init_logger(log_file_name: str = "logs.log") -> None:
     log_handler = logging.FileHandler(str(log_file))
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(logging.INFO)
-    std_log_handler = logging.StreamHandler(sys.stdout)
-    std_log_handler.setFormatter(log_formatter)
-    std_log_handler.setLevel(logging.DEBUG)
+    # Set the log formatter and handler levels for the standard output
+    std_log_formatter = logging.Formatter("%(message)s")
+    std_log_formatter.datefmt = "%H:%M:%S"
+    std_log_handler = RichHandler()
+    std_log_handler.setFormatter(std_log_formatter)
     # Set up the logger
     logger = logging.getLogger()
     logger.addHandler(std_log_handler)
