@@ -48,6 +48,7 @@ def parse_and_validate_student_data(resave: bool = False) -> list[Student]:
     -----------
     resave : bool, optional
         Whether to save a fixed version of the file.
+        Note: Keep this False all the time except for the first time you run the program.
 
     Returns:
     --------
