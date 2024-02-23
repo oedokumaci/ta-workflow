@@ -45,7 +45,9 @@ class Student(BaseModel):
         return hash(self.bilkent_id)
 
 
-def parse_and_validate_student_data(resave: bool = False) -> list[Student]:
+def parse_and_validate_student_data(
+    resave: bool = False,
+) -> list[Student]:  # resave True for the first time ever use
     """
     Reads the student data from a file and validates it.
 
