@@ -52,6 +52,7 @@ repos:
           - -o
           - requirements.txt
           - --without-hashes
+          - --pyproject
         language: system
         pass_filenames: false
       - id: pdm-lock-check

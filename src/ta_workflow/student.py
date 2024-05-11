@@ -1,5 +1,5 @@
 import pandas as pd
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from unidecode import unidecode
 
 from ta_workflow.config_parser import YAML_CONFIG
@@ -26,6 +26,11 @@ class Student(BaseModel):
         Whether the student has withdrawn from the course.
     """
 
+    # if bilkent_id is int cast it to str before validation with pre=True
+    @validator("bilkent_id", pre=True)
+    def cast_bilkent_id_to_str(cls, v) -> str:
+        return str(v)
+
     first_name: str
     last_name: str
     department: str
@@ -40,7 +45,9 @@ class Student(BaseModel):
         return hash(self.bilkent_id)
 
 
-def parse_and_validate_student_data(resave: bool = False) -> list[Student]:
+def parse_and_validate_student_data(
+    resave: bool = False,
+) -> list[Student]:  # resave True for the first time ever use
     """
     Reads the student data from a file and validates it.
 
@@ -99,4 +106,4 @@ def parse_and_validate_student_data(resave: bool = False) -> list[Student]:
             )
 
     # Create a list of Student objects from the data frame
-    return [Student(**row._asdict()) for row in df.itertuples()]
+    return [Student(**row._asdict()) for row in df.itertuples()]  # type: ignore

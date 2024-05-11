@@ -1,6 +1,7 @@
 """Command line application module."""
 
 import logging
+from subprocess import CalledProcessError
 
 import typer
 from rich import print as rprint
@@ -44,9 +45,12 @@ def distribute(
         logging.error(
             "Could not find the assignments directory. Run `make_dirs` first."
         )
-
-    # Log a message to indicate that the command has finished executing.
-    logging.info("Distributing assignments finished.")
+    except CalledProcessError:
+        # Log an error if the command to copy the files fails.
+        logging.error("Error copying the files. Did you use make-dirs?")
+    else:
+        # Log a message to indicate that the command has finished executing.
+        logging.info("Distributing assignments finished.")
 
 
 @app.command()
