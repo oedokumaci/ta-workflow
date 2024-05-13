@@ -19,7 +19,7 @@ def get_cols_after(df: pd.DataFrame, col_name: str) -> pd.Index:
     Returns:
         pd.Index: The columns after the given column.
     """
-    return df.columns[df.columns.get_loc(col_name) + 1 :]
+    return df.columns[df.columns.get_loc(col_name) + 1 :]  # type: ignore
 
 
 def summarize_data() -> None:
